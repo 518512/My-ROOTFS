@@ -1,0 +1,24 @@
+name: Cancel Specific Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      workflow_id:
+        description: 'The ID of the workflow to cancel'
+        required: true
+      access_token:
+        description: 'Access token with repo scope'
+        required: true
+
+jobs:
+  cancel_workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@main
+
+      - name: Cancel workflow
+        uses: styfle/cancel-workflow-action@main
+        with:
+          workflow_id: ${{ github.event.inputs.workflow_id }}
+          access_token: ${{ github.event.inputs.access_token }}

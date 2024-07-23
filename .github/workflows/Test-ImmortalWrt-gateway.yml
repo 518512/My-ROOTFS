@@ -1,0 +1,247 @@
+#
+# https://github.com/P3TERX/Actions-OpenWrt
+#
+# File: .github/workflows/openwrt-bulder.yml
+# Description: Build OpenWrt using GitHub Actions
+#
+# Copyright (c) 2019-2024 P3TERX <https://p3terx.com>
+#
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
+
+name: ImmortalWrt Gateway Builder Test
+
+permissions: write-all
+#开启写权限，防止无法上传到release
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+    inputs:
+      ssh:
+        description: 'SSH connection to Actions'
+        required: false
+        default: 'false'
+  schedule:
+   - cron: '0 18 * * 5'
+
+env:
+  REPO_URL: https://github.com/immortalwrt/immortalwrt
+  REPO_BRANCH: openwrt-23.05
+  VERSION: 23.05
+  FEEDS_CONF: feedss.conf.default
+  CONFIG_FILE: ImmortalWrt/.config
+  DIY_P1_SH: ImmortalWrt/diy-part1.sh
+  DIY_P2_SH: ImmortalWrt/diy-part2-gateway.sh
+  UPLOAD_FIRMWARE: true
+  UPLOAD_RELEASE: true
+  TZ: Asia/Shanghai
+  FILE_NAME: immortalwrt_x86_x64_Gatreway
+  PRODUCT_NAME: immortalwrt_x86_x64_Gateway
+
+jobs:
+  OpenWrt_Gateway_Builder:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+
+      - name: Check space usage
+        if: (!cancelled())
+        run: df -hT
+
+      - name: Free disk space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          # this might remove tools that are actually needed,
+          # if set to "true" but frees about 6 GB
+          tool-cache: false
+          
+          # all of these default to true, but feel free to set to
+          # "false" if necessary for your workflow
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+
+      - name: Check space usage
+        if: (!cancelled())
+        run: df -hT
+
+      - name: Initialization environment
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo -E apt-get -qq update
+          sudo bash -c 'bash <(curl -s https://build-scripts.immortalwrt.org/init_build_environment.sh)'
+          sudo -E apt-get -qq autoremove --purge
+          sudo -E apt-get -qq clean
+          sudo timedatectl set-timezone "$TZ"
+          sudo mkdir -p /workdir
+          sudo chown $USER:$GROUPS /workdir
+
+      - name: Clone source code
+        working-directory: /workdir
+        run: |
+          df -hT $PWD
+          git clone -b $REPO_BRANCH --single-branch --depth 1 $REPO_URL openwrt
+          ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+          cd openwrt
+          useVersionInfo=$(git show -s --date=short --format="Author: %an<br/>date: %cd<br/>commit: %s<br/>commit hash: %H")
+          echo "useVersionInfo=$useVersionInfo" >> $GITHUB_ENV
+          echo "DATE=$(date "+%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
+          echo "DATE1=$(date "+%Y-%m-%d")" >> $GITHUB_ENV
+
+
+      - name: Load custom feeds
+        run: |
+          [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
+          chmod +x $DIY_P1_SH
+          cd openwrt
+          $GITHUB_WORKSPACE/$DIY_P1_SH
+
+      - name: Update feeds
+        run: cd openwrt && ./scripts/feeds update -a
+
+      - name: Install feeds
+        run: cd openwrt && ./scripts/feeds install -a
+
+      - name: Generate default configuration
+        run: cd openwrt && make defconfig
+      
+      - name: Load custom configuration
+        run: |
+          chmod +x $DIY_P2_SH
+          cd openwrt
+          $GITHUB_WORKSPACE/$DIY_P2_SH
+
+      - name: SSH connection to Actions
+        uses: P3TERX/ssh2actions@v1.0.0
+        if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
+        env:
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+
+      - name: Download package
+        id: package
+        run: |
+          cd openwrt
+          make defconfig
+          make download -j8
+          find dl -size -1024c -exec ls -l {} \;
+          find dl -size -1024c -exec rm -f {} \;
+
+      - name: Compile the firmware
+        id: compile
+        run: |
+          cd openwrt
+          echo -e "$(nproc) thread compile"
+          make -j$(nproc) || make -j1 || make -j1 V=s
+          # echo "::set-output name=status::success"
+          echo "status=success" >> $GITHUB_OUTPUT
+          grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
+          [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
+          echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+          echo "FILE_DATE2=$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+
+      - name: Check space usage
+        if: (!cancelled())
+        run: df -hT
+
+      - name: Organize compiled firmware
+        if: steps.compile.outputs.status == 'success' && !cancelled()
+        run: |
+          cp -rf openwrt/.config openwrt/bin/targets/x86/64/config
+          # cd openwrt/bin/targets/x86/64
+          cd openwrt/bin/targets/*/*
+          rm -rf packages         
+          rm -rf *.buildinfo
+          rm -rf profiles.json
+          rm -rf sha256sums
+          rm -rf immortalwrt-x86-64-generic-kernel.bin
+          rm -rf immortalwrt-x86-64-generic.manifest
+          rm -rf immortalwrt-x86-64-generic-squashfs-rootfs.img.gz
+          mv immortalwrt-x86-64-generic-rootfs.tar.gz immortalwrt-GW-${{ env.VERSION }}-x86-64-generic-rootfs-${{ env.FILE_DATE2 }}.tar.gz
+          mv immortalwrt-x86-64-generic-squashfs-combined-efi.img.gz immortalwrt-GW-${{ env.VERSION }}-x86-64-generic-squashfs-combined-efi-${{ env.FILE_DATE2 }}.img.gz
+          
+          echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+          # echo "::set-output name=status::success"
+          echo "status=success" >> $GITHUB_OUTPUT
+          
+       #- name: Upload firmware to release
+         #if: steps.compile.outputs.status == 'success' && !cancelled()
+         #uses: svenstaro/upload-release-action@v2
+        # with:
+           #repo_token: ${{ secrets.TOKEN3 }}
+           #file_glob: true
+           #file: openwrt/bin/targets/x86/64/*
+           #asset_name: ${{ github.event.repository.name }}-${{ github.sha }}
+           #tag: gateway-immortalwrt-${{ env.VERSION }}-x86_64-${{ env.COMPILE_DATE }}
+           #body: |
+           # ### 主路由
+           # - Default IP: 192.168.3.1
+           # - Default password: password
+           # overwrite: true
+           
+      - name: Upload firmware directory
+        uses: actions/upload-artifact@main
+        if: steps.organize.outputs.status == 'success' && !cancelled()
+        with:
+          name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+          path: ${{ env.FIRMWARE }}
+
+      - name: Create release
+        id: release
+        uses: ncipollo/release-action@v1
+        with:
+          name: R${{ env.DATE1 }} for ${{ env.PRODUCT_NAME }}
+          allowUpdates: true
+          tag: ${{ env.FILE_NAME }}
+          commit: main
+          token: ${{ secrets.TOKEN3  }}
+          body: |
+            **This is Firmware : ImmortalWrt_x86_x64_Gateway**
+            ### 📒 固件信息
+
+            - 💻 平台架构: x86/x64
+            - ⚽ 固件源码: ${{ env.REPO_URL }}
+            - 💝 源码分支: ${{ env.REPO_BRANCH }}（23.05）
+            - 🌐 默认地址: 192.168.3.1
+            - 🔑 默认密码: password
+            ### 🧊 固件版本
+            - LXC Mini底包，非完整固件，每周五18点自动编译
+            - 固件编译前最后一次➦[主源码](${{ env.REPO_URL }})更新记录
+            ${{ env.useVersionInfo }}
+          artifacts: ${{ env.FIRMWARE }}/*        
+
+      - name: Delete workflow runs
+        uses: Mattraks/delete-workflow-runs@main
+        with:
+          token: ${{ secrets.TOKEN3 }}
+          repository: ${{ github.repository }}
+          retain_days: 3
+          keep_minimum_runs: 3
+
+      - name: Remove old releases
+        uses: dev-drprasad/delete-older-releases@master
+        if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+        with:
+          repo:
+          keep_latest: 10
+          delete_tag_pattern:
+          delete_tags: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN3 }}
+
+      - name: Telegram notification
+        run: |
+          MSG="
+          打包时间：${{ env.DATE }}
+          OpenWrt 更新信息：${{ env.useVersionInfo }}
+          ${{ env.PRODUCT_NAME }} 打包完成
+          "
+          curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&text=${MSG}"

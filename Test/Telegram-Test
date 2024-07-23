@@ -1,0 +1,24 @@
+name: 'GitHub Actions 测试 Telegram 通知'
+
+on:
+  # 手动触发
+  workflow_dispatch:
+  # 定时触发，Cron 表达式表示每天 00:30 触发一次
+  schedule:
+    - cron: '30 0 * * *'
+
+jobs:
+  bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: '发送 Telegram 消息'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: 'MarkdownV2' # 使用 MarkdownV2 格式
+          message: |
+            '这是*粗体*测试消息。'
+            '这是_斜体_测试消息。'
+            '这是新的一行。'
+            '还有一行新内容。'
