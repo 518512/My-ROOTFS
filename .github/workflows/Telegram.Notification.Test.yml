@@ -19,17 +19,15 @@ jobs:
           echo "BUILD_TIME=YourBuildTime" >> $GITHUB_ENV
           echo "GITHUB_RELEASE=YourGithubRelease" >> $GITHUB_ENV
 
-      - name: Print Telegram Secrets
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      - name: Print Telegram Secrets for Debugging
         run: |
-          echo "Telegram Bot Token: $TELEGRAM_BOT_TOKEN"
-          echo "Telegram Chat ID: $TELEGRAM_CHAT_ID"
+          echo "TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}"
+          echo "TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}"
 
       - name: Telegram notification
         run: |
-          curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
-            -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
-            -d "text=您的${{ env.PRODUCT_NAME }}固件成功编译完成了！%0A%0A🛠 编译版本：${{ env.DISTRIB_REVISION }}%0A🖥 内核版本：${{ env.KERNEL_PATCHVER }}%0A🎈 编译时间：${{ env.FILE_TIME1 }}%0A⏰ 编译用时：${{ env.BUILD_TIME }}%0A🎉 发布地址：${{ env.GITHUB_RELEASE }}%0A🌴 固件已经编译完成 🎈！！！" \
-            >/dev/null 2>&1 && echo "ok..."
+          CURL_CMD="curl \"https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage\" \
+            -d \"chat_id=${{ secrets.TELEGRAM_CHAT_ID }}\" \
+            -d \"text=您的${{ env.PRODUCT_NAME }}固件成功编译完成了！%0A%0A🛠 编译版本：${{ env.DISTRIB_REVISION }}%0A🖥 内核版本：${{ env.KERNEL_PATCHVER }}%0A🎈 编译时间：${{ env.FILE_TIME1 }}%0A⏰ 编译用时：${{ env.BUILD_TIME }}%0A🎉 发布地址：${{ env.GITHUB_RELEASE }}%0A🌴 固件已经编译完成 🎈！！！\""
+          echo "Executing: $CURL_CMD"
+          eval $CURL_CMD >/dev/null 2>&1 && echo "ok..."
