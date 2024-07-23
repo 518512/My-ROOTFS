@@ -162,7 +162,7 @@ jobs:
         rm -rf openwrt-armvirt-64-rootfs-ext4.img.gz
         rm -rf openwrt-armvirt-64-rootfs-squashfs.img.gz
         rm -rf openwrt-armvirt-64-rootfs.cpio.gz
-        mv openwrt-armvirt-64-default-rootfs.tar.gz openwrt-22.03-${{ env.VERSION }}-armsr-armv8-generic-rootfs-${{ env.FILE_DATE2 }}.tar.gz
+        mv openwrt-armvirt-64-default-rootfs.tar.gz openwrt-22.03${{ env.VERSION }}-armsr-armv8-generic-rootfs-${{ env.FILE_DATE2 }}.tar.gz
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
 
