@@ -1,9 +1,11 @@
 name: Send Telegram Notification
 
 on:
-  push:
-    branches:
-      - main
+  # 手动触发
+  workflow_dispatch:
+  # 定时触发，Cron 表达式表示每天 00:30 触发一次
+  schedule:
+    - cron: '30 0 * * *'
 
 jobs:
   send_notification:
