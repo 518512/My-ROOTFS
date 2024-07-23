@@ -198,12 +198,12 @@ jobs:
       run: |
         cd openwrt/bin/targets/*/*
         rm -rf packages
-         rm -rf *.buildinfo
-          rm -rf profiles.json
-          rm -rf sha256sums
-          rm -rf openwrt-armsr-armv8-generic-kernel.bin
-          openwrt-armsr-armv8-generic.manifest
-          mv openwrt-armsr-armv8-generic-rootfs.tar.gz openwrt-23.05-${{ env.VERSION }}-armsr-armv8-generic-rootfs-${{ env.FILE_DATE2 }}.tar.gz
+        rm -rf *.buildinfo
+        rm -rf profiles.json
+        rm -rf sha256sums
+        rm -rf openwrt-armsr-armv8-generic-kernel.bin
+        rm -rf openwrt-armsr-armv8-generic.manifest
+        mv openwrt-armsr-armv8-generic-rootfs.tar.gz openwrt-23.05-${{ env.VERSION }}-armsr-armv8-generic-rootfs-${{ env.FILE_DATE2 }}.tar.gz
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         # echo "::set-output name=status::success"
         echo "status=success" >> $GITHUB_OUTPUT
