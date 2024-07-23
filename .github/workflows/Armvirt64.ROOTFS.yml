@@ -90,11 +90,11 @@ jobs:
         df -Th
 
     - name: 缓存加速
-        uses: stupidloud/cachewrtbuild@main
-        if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
-        with:
-          ccache: 'true'
-          prefix: ${{ github.workspace }}/openwrt
+      uses: stupidloud/cachewrtbuild@main
+      if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
+      with:
+        ccache: 'true'
+        prefix: ${{ github.workspace }}/openwrt
 
       - name: 更新时区、编译时间
         id: date
