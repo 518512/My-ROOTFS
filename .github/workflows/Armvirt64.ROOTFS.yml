@@ -202,9 +202,8 @@ jobs:
         rm -rf *.buildinfo
         rm -rf profiles.json
         rm -rf sha256sums
-        rm -rf openwrt-armsr-armv8-generic-kernel.bin
-        rm -rf immortalwrt-x86-64-generic.manifest
-        rm -rf openwrt-armsr-armv8-generic.manifest
+        rm -rf openwrt-armvirt-64-generic-kernel.bin
+        rm -rf openwrt-armvirt-64-generic.manifest
         mv openwrt-armvirt-64-generic-rootfs.tar.gz openwrt-LEDE-${{ env.VERSION }}armsr-armv8-generic-rootfs-${{ env.FILE_DATE2 }}.tar.gz
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         # echo "::set-output name=status::success"
