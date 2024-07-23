@@ -275,22 +275,22 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN3 }}
 
-      - name: Telegram notification
-        run: |
-         curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&text=
+    - name: Telegram notification
+      run: |
+       curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&text=
 
-           您的${{ env.PRODUCT_NAME }}固件成功编译完成了！
+        您的${{ env.PRODUCT_NAME }}固件成功编译完成了！
 
-          🛠 编译版本：${{ env.DISTRIB_REVISION }}
+        🛠 编译版本：${{ env.DISTRIB_REVISION }}
 
-          🖥 内核版本：${{ env.KERNEL_PATCHVER }}
+        🖥 内核版本：${{ env.KERNEL_PATCHVER }}
 
-          🎈 编译时间：${{ env.FILE_TIME1 }}
+        🎈 编译时间：${{ env.FILE_TIME1 }}
 
-          ⏰ 编译用时：${{ env.BUILD_TIME }}
+        ⏰ 编译用时：${{ env.BUILD_TIME }}
 
-          🎉 发布地址：${{ env.GITHUB_RELEASE }}
+        🎉 发布地址：${{ env.GITHUB_RELEASE }}
 
-          🌴 固件已经编译完成 🎈！！！
+        🌴 固件已经编译完成 🎈！！！
 
-          " >/dev/null 2>&1 && echo "ok..."
+        " >/dev/null 2>&1 && echo "ok..."
