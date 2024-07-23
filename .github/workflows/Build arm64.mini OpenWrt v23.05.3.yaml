@@ -243,7 +243,7 @@ jobs:
           - 🚀 每日：OpenWRT 作者固件 ➦ [xYx-c](https://github.com/xYx-c/build-openwrt/releases) ➦ [Zane-E](https://github.com/Zane-E/ROOTFS/releases) ➦ [217heidai](https://github.com/217heidai/OpenWrt-Builder/releases)
           - 🚀 随缘：LXC MINI ROOTFS ➦ [OpenWRT](https://github.com/518512/xYx-openwrt/releases) ➦ [LEDE](https://github.com/518512/ROOTFS/releases) ➦ [ImmortalWrt](https://github.com/518512/ROOTFS/releases)即可下载
           - 💻 平台架构: Armvirt/Armsr 64 , 🌐 默认地址: 10.5.2.1 , 🔑 默认密码: password
-          - ⚽ 固件源码: ${{ env.REPO_URL }} , 💝 源码分支: ${{ env.REPO_BRANCH }}（23.05.3）
+          - ⚽ 固件源码: ${{ env.REPO_URL }} , 💝 源码分支: ${{ env.REPO_BRANCH }}（23.05.4）
           ### 🧊 固件版本
           - LXC Mini底包，非完整固件，每周五18点自动编译
           - 固件编译前最后一次➦[主源码](${{ env.REPO_URL }})更新记录
