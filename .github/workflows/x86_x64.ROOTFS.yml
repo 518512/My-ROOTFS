@@ -27,10 +27,10 @@ on:
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
-  FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: .x86_x64.config
-  DIY_P1_SH: diy-part1.sh
-  DIY_P2_SH: diy-part2.sh
+  FEEDS_CONF: LEDE/feeds.conf.default
+  CONFIG_FILE: LEDE/.x86_x64.config
+  DIY_P1_SH: LEDE/diy-part1.sh
+  DIY_P2_SH: LEDE/diy-part2.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_COWTRANSFER: false
@@ -39,6 +39,9 @@ env:
   TZ: Asia/Shanghai
   FILE_NAME: OP_x86_x64_ROOTFS
   PRODUCT_NAME: OP_x86_x64_ROOTFS
+  GITHUB_RELEASE: https://g3s0.short.gy/OpenWRT
+  DISTRIB_REVISION: LEDE master
+  KERNEL_PATCHVER: 无内核，纯LXC ROOTFS
 
 jobs:
   build:
@@ -85,6 +88,24 @@ jobs:
         echo "status=success" >> ${GITHUB_OUTPUT}
         df -Th
 
+    - name: 缓存加速
+      uses: stupidloud/cachewrtbuild@main
+      if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
+      with:
+        ccache: 'true'
+        prefix: ${{ github.workspace }}/openwrt
+
+    - name: 更新时区、编译时间
+      id: date
+      run: |
+        sudo timedatectl set-timezone "$TZ"
+        echo "FILE_TIME=$(date +"%m-%d %H.%M")" >> $GITHUB_ENV
+        echo "FILE_TIME1=$(date "+%Y年%m月%d日-%H点%M分")" >> $GITHUB_ENV
+        echo "FILE_TIME2=$(date "+%Y%m%d-%H%M")" >> $GITHUB_ENV
+        echo "编译开始时间..."
+        START_TIME=`date +'%Y-%m-%d %H:%M:%S'`
+        echo "START_SECONDS=$(date --date="$START_TIME" +%s)" >> $GITHUB_ENV
+
     - name: Clone source code
       working-directory: /workdir
       run: |
@@ -96,6 +117,7 @@ jobs:
         echo "useVersionInfo=$useVersionInfo" >> $GITHUB_ENV
         echo "DATE=$(date "+%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
         echo "DATE1=$(date "+%Y-%m-%d")" >> $GITHUB_ENV
+        echo "tag_name=$(date +%Y%m%d)" >> $GITHUB_ENV
 
     - name: Load custom feeds
       run: |
@@ -145,7 +167,15 @@ jobs:
         grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
         [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
         echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
-
+        echo "编译完成时间..."
+        START_SECONDS=${{ env.START_SECONDS }}
+        END_TIME=`date +'%Y-%m-%d %H:%M:%S'`
+        END_SECONDS=$(date --date="$END_TIME" +%s)
+        SECONDS=$((END_SECONDS-START_SECONDS))
+        HOUR=$(( $SECONDS/3600 )) && MIN=$(( ($SECONDS-${HOUR}*3600)/60 )) && SEC=$(( $SECONDS-${HOUR}*3600-${MIN}*60 ))
+        echo "BUILD_TIME=${HOUR}时${MIN}分${SEC}秒" >> $GITHUB_ENV
+        echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+        echo "FILE_DATE2=$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
     - name: Clean up server space
       if: steps.compile.outputs.status == 'success' && !cancelled()
       run: |
@@ -165,7 +195,16 @@ jobs:
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
         cd openwrt/bin/targets/*/*
-        rm -rf packages
+        rm -rf packages     
+        rm -rf *.buildinfo
+        rm -rf profiles.json
+        rm -rf sha256sums
+        rm -rf openwrt-x86-64-generic-kernel.bin
+        rm -rf openwrt-x86-64-generic.manifest
+        rm -rf openwrt-x86-64-generic-squashfs-combined-efi.vmdk
+        rm -rf openwrt-x86-64-generic-squashfs-rootfs.img.gz
+        rm -rf openwrt-x86-64-generic-squashfs-combined-efi.img.gz
+        mv openwrt-x86-64-generic-rootfs.tar.gz openwrt-LEDE-${{ env.VERSION }}x86-64-generic-rootfs-${{ env.FILE_DATE2 }}.tar.gz
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         # echo "::set-output name=status::success"
         echo "status=success" >> $GITHUB_OUTPUT
@@ -202,13 +241,10 @@ jobs:
         body: |
           **This is Temporary Mini Firmware for x86_x64**
           ### 📒 固件信息
-          - 🚀 每日：成品固件点击此处跳转➦[Zane-E MINI ROOTFS](https://github.com/Zane-E/ROOTFS/releases/tag/LXC)即可下载
-          - 🚀 随缘：成品固件点击此处跳转➦[MINI ROOTFS](https://github.com/518512/ROOTFS/releases/tag/OP_Armvirt_ROOTFS_mini)即可下载
-          - 💻 平台架构: x86_x64
-          - ⚽ 固件源码: ${{ env.REPO_URL }}
-          - 💝 源码分支: ${{ env.REPO_BRANCH }}（24.2.2）
-          - 🌐 默认地址: 192.168.1.1
-          - 🔑 默认密码: password
+          - 🚀 每日：OpenWRT 作者固件 ➦ [xYx-c](https://github.com/xYx-c/build-openwrt/releases) ➦ [Zane-E](https://github.com/Zane-E/ROOTFS/releases) ➦ [217heidai](https://github.com/217heidai/OpenWrt-Builder/releases)
+          - 🚀 随缘：LXC MINI ROOTFS ➦ [OpenWRT](https://github.com/518512/My-ROOTFS/releases) ➦ [LEDE](https://github.com/518512/My-ROOTFS/releases) ➦ [ImmortalWrt](https://github.com/518512/My-ROOTFS/releases)即可下载
+          - 💻 平台架构: x86_x64 , 🌐 默认地址: 10.5.2.1 , 🔑 默认密码: password
+          - ⚽ 固件源码: ${{ env.REPO_URL }} , 💝 源码分支: ${{ env.REPO_BRANCH }}（24.7.7）
           ### 🧊 固件版本
           - LXC Mini底包，非完整固件，每周五18点自动编译
           - 固件编译前最后一次➦[主源码](${{ env.REPO_URL }})更新记录
@@ -246,9 +282,20 @@ jobs:
 
     - name: Telegram notification
       run: |
-        MSG="
-        打包时间：${{ env.DATE }}
-        OpenWrt 更新信息：${{ env.useVersionInfo }}
-        ${{ env.PRODUCT_NAME }} 打包完成
-        "
-        curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&text=${MSG}"
+       curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&text=
+
+        您的${{ env.PRODUCT_NAME }}固件成功编译完成了！
+
+        🛠 编译版本：${{ env.DISTRIB_REVISION }}
+
+        🖥 内核版本：${{ env.KERNEL_PATCHVER }}
+
+        🎈 编译时间：${{ env.FILE_TIME1 }}
+
+        ⏰ 编译用时：${{ env.BUILD_TIME }}
+
+        🎉 发布地址：${{ env.GITHUB_RELEASE }}
+
+        🌴 固件已经编译完成 🎈！！！
+
+        " >/dev/null 2>&1 && echo "ok..."
