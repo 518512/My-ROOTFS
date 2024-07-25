@@ -46,7 +46,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-22.04
-    if: github.event.repository.owner.id == github.event.sender.id || ! github.event.sender.id
 
     steps:
     - name: Checkout
@@ -89,7 +88,7 @@ jobs:
         echo "status=success" >> ${GITHUB_OUTPUT}
         df -Th
 
-   - name: 缓存加速
+    - name: 缓存加速
       uses: stupidloud/cachewrtbuild@main
       if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
       with:
