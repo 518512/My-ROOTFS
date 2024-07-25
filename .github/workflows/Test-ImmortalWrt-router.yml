@@ -39,6 +39,9 @@ env:
   TZ: Asia/Shanghai
   FILE_NAME: immortalwrt_x86_x64_Router
   PRODUCT_NAME: immortalwrt_x86_x64_Router
+  GITHUB_RELEASE: https://g3s0.short.gy/OpenWRT
+  DISTRIB_REVISION: Immortalwrt Main
+  KERNEL_PATCHVER: 无内核，纯LXC ROOTFS
 
 jobs:
   OpenWrt_Rateway_Builder:
@@ -83,6 +86,23 @@ jobs:
           sudo timedatectl set-timezone "$TZ"
           sudo mkdir -p /workdir
           sudo chown $USER:$GROUPS /workdir
+      - name: 缓存加速
+        uses: stupidloud/cachewrtbuild@main
+        if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
+        with:
+          ccache: 'true'
+          prefix: ${{ github.workspace }}/openwrt
+
+      - name: 更新时区、编译时间
+        id: date
+        run: |
+          sudo timedatectl set-timezone "$TZ"
+          echo "FILE_TIME=$(date +"%m-%d %H.%M")" >> $GITHUB_ENV
+          echo "FILE_TIME1=$(date "+%Y年%m月%d日-%H:%M")" >> $GITHUB_ENV
+          echo "FILE_TIME2=$(date "+%Y%m%d-%H%M")" >> $GITHUB_ENV
+          echo "编译开始时间..."
+          START_TIME=`date +'%Y-%m-%d %H:%M:%S'`
+          echo "START_SECONDS=$(date --date="$START_TIME" +%s)" >> $GITHUB_ENV
 
       - name: Clone source code
         working-directory: /workdir
@@ -146,6 +166,14 @@ jobs:
           grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
           [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
           echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+          echo "编译完成时间..."
+          START_SECONDS=${{ env.START_SECONDS }}
+          END_TIME=`date +'%Y-%m-%d %H:%M:%S'`
+          END_SECONDS=$(date --date="$END_TIME" +%s)
+          SECONDS=$((END_SECONDS-START_SECONDS))
+          HOUR=$(( $SECONDS/3600 )) && MIN=$(( ($SECONDS-${HOUR}*3600)/60 )) && SEC=$(( $SECONDS-${HOUR}*3600-${MIN}*60 ))
+          echo "BUILD_TIME=${HOUR}时${MIN}分${SEC}秒" >> $GITHUB_ENV
+          echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
           echo "FILE_DATE2=$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
       - name: Check space usage
@@ -206,12 +234,10 @@ jobs:
           body: |
             **This is Firmware : ImmortalWrt_x86_x64_Router**
             ### 📒 固件信息
-
-            - 💻 平台架构: X86/x64
-            - ⚽ 固件源码: ${{ env.REPO_URL }}
-            - 💝 源码分支: ${{ env.REPO_BRANCH }}（23.05）
-            - 🌐 默认地址: 192.168.3.1
-            - 🔑 默认密码: password
+            - 🚀 每日：OpenWRT 作者固件 ➦ [xYx-c](https://github.com/xYx-c/build-openwrt/releases) ➦ [Zane-E](https://github.com/Zane-E/ROOTFS/releases) ➦ [217heidai](https://github.com/217heidai/OpenWrt-Builder/releases)
+            - 🚀 随缘：LXC MINI ROOTFS ➦ [OpenWRT](https://github.com/518512/xYx-openwrt/releases) ➦ [LEDE](https://github.com/518512/ROOTFS/releases) ➦ [ImmortalWrt](https://github.com/518512/ROOTFS/releases)即可下载
+            - 💻 平台架构: x86_x64 , 🌐 默认地址: 10.5.2.1 , 🔑 默认密码: password
+            - ⚽ 固件源码: ${{ env.REPO_URL }} , 💝 源码分支: ${{ env.REPO_BRANCH }}（23.05.3）
             ### 🧊 固件版本
             - LXC 底包，非完整固件，每周五18点自动编译
             - 固件编译前最后一次➦[主源码](${{ env.REPO_URL }})更新记录
@@ -239,9 +265,20 @@ jobs:
 
       - name: Telegram notification
         run: |
-          MSG="
-          打包时间：${{ env.DATE }}
-          OpenWrt 更新信息：${{ env.useVersionInfo }}
-          ${{ env.PRODUCT_NAME }} 打包完成
-          "
-          curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&text=${MSG}"
+         curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&text=
+
+           您的${{ env.PRODUCT_NAME }}固件成功编译完成了！
+
+          🛠 编译版本：${{ env.DISTRIB_REVISION }}
+
+          🖥 内核版本：${{ env.KERNEL_PATCHVER }}
+
+          🎈 编译时间：${{ env.FILE_TIME1 }}
+
+          ⏰ 编译用时：${{ env.BUILD_TIME }}
+
+          🎉 发布地址：${{ env.GITHUB_RELEASE }}
+
+          🌴 固件已经编译完成 🎈！！！
+
+          " >/dev/null 2>&1 && echo "ok..."
