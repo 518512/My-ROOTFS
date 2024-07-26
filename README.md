@@ -8,20 +8,20 @@
 
 **OpenWRT(ImmortalWrt) v23.05 Fork [217heidai/OpenWrt-Builder](https://github.com/217heidai/OpenWrt-Builder)使用[ImmortalWrt源码](https://github.com/immortalwrt/immortalwrt)源码编译**
   |名称|说明|用户|密码|
-  |:----|:----|:----|:----|
-  | IP| 10.5.2.1| root| password|
+  |:----|:----|:----|:----|:----|
+  | IP| 10.5.2.1| root| password| 如遇不可打开，可尝试192.168.1.5，或查看/etc/config/network里的信息|
 ## 固件下载 [![](https://img.shields.io/badge/-编译状态及下载链接-FFFFFF.svg)](#固件下载-)
 点击下表中 [![](https://img.shields.io/badge/下载-链接-blueviolet.svg?style=flat&logo=hack-the-box)](https://github.com/518512/My-ROOTFS/releases) 即可跳转到该设备固件下载页面
-| 平台+设备名称 | 固件编译状态 | 固件下载 | IP+登录信息 |
+| 平台+设备名称 | 固件编译状态 | 固件下载 |
 | :------------- | :------------- | :------------- | :------------- |
-| [![](https://img.shields.io/badge/OpenWrt-ArmV8_Mini_ROOTFS-32C955.svg?logo=openwrt)](#) |[![](https://github.com/518512/My-ROOTFS/actions/workflows/Build%20arm64.mini%20OpenWrt%20v22.03.6.yaml/badge.svg)](#) | [![](https://img.shields.io/badge/下载-链接-blueviolet.svg?logo=hack-the-box)](https://github.com/518512/My-ROOTFS/releases) | 10.5.2.1,root,password |
-| [![](https://img.shields.io/badge/OpenWrt-ArmV8_Mini_ROOTFS-32C955.svg?logo=openwrt)](#) |[![](https://github.com/518512/My-ROOTFS/actions/workflows/Build%20arm64.mini%20OpenWrt%20v23.05.3.yaml/badge.svg)](#) | [![](https://img.shields.io/badge/下载-链接-blueviolet.svg?logo=hack-the-box)](https://github.com/518512/My-ROOTFS/releases) | 10.5.2.1,root,password |
-| [![](https://img.shields.io/badge/OpenWrt-LEDE_ArmV8_Mini_ROOTFS-32C955.svg?logo=openwrt)](#) |[![](https://github.com/518512/My-ROOTFS/actions/workflows/Armvirt64.mini.ROOTFS.yml/badge.svg)](#) | [![](https://img.shields.io/badge/下载-链接-blueviolet.svg?logo=hack-the-box)](https://github.com/518512/My-ROOTFS/releases) | 10.5.2.1,root,password |
-| [![](https://img.shields.io/badge/OpenWrt-LEDE_ArmV8_ROOTFS-32C955.svg?logo=openwrt)](#) |[![](https://github.com/518512/My-ROOTFS/actions/workflows/Armvirt64.ROOTFS.yml/badge.svg)](#) | [![](https://img.shields.io/badge/下载-链接-blueviolet.svg?logo=hack-the-box)](https://github.com/518512/My-ROOTFS/releases) | 10.5.2.1,root,password |
-| [![](https://img.shields.io/badge/OpenWrt-LEDE_X86_X64_ROOTFS-32C955.svg?logo=openwrt)](#) |[![](https://github.com/518512/My-ROOTFS/actions/workflows/x86_x64.ROOTFS.yml/badge.svg)](#) | [![](https://img.shields.io/badge/下载-链接-blueviolet.svg?logo=hack-the-box)](https://github.com/518512/My-ROOTFS/releases) | 10.5.2.1,root,password |
-| [![](https://img.shields.io/badge/OpenWrt-LEDE_X86_X64_Mini_ROOTFS-32C955.svg?logo=openwrt)](#) |[![](https://github.com/518512/My-ROOTFS/actions/workflows/x86_x64.mini.ROOTFS.yml/badge.svg)](#) | [![](https://img.shields.io/badge/下载-链接-blueviolet.svg?logo=hack-the-box)](https://github.com/518512/My-ROOTFS/releases) | 10.5.2.1,root,password |
-| [![](https://img.shields.io/badge/OpenWrt-ImmortalWrt_X86_X64_ROOTFS-32C955.svg?logo=openwrt)](#) |[![](https://github.com/518512/My-ROOTFS/actions/workflows/Test-ImmortalWrt-router.yml/badge.svg)](#) | [![](https://img.shields.io/badge/下载-链接-blueviolet.svg?logo=hack-the-box)](https://github.com/518512/My-ROOTFS/releases) | 10.5.2.1,root,password |
-| [![](https://img.shields.io/badge/OpenWrt-ImmortalWrt_X86_X64_Mini_ROOTFS-32C955.svg?logo=openwrt)](#) |[![](https://github.com/518512/My-ROOTFS/actions/workflows/Test-ImmortalWrt-gateway.yml/badge.svg)](#) | [![](https://img.shields.io/badge/下载-链接-blueviolet.svg?logo=hack-the-box)](https://github.com/518512/My-ROOTFS/releases) | 10.5.2.1,root,password |
+| [![](https://img.shields.io/badge/OpenWrt-ArmV8_Mini_ROOTFS-32C955.svg?logo=openwrt)](#) |[![](https://github.com/518512/My-ROOTFS/actions/workflows/Build%20arm64.mini%20OpenWrt%20v22.03.6.yaml/badge.svg)](#) | [![](https://img.shields.io/badge/下载-链接-blueviolet.svg?logo=hack-the-box)](https://github.com/518512/My-ROOTFS/releases) |
+| [![](https://img.shields.io/badge/OpenWrt-ArmV8_Mini_ROOTFS-32C955.svg?logo=openwrt)](#) |[![](https://github.com/518512/My-ROOTFS/actions/workflows/Build%20arm64.mini%20OpenWrt%20v23.05.3.yaml/badge.svg)](#) | [![](https://img.shields.io/badge/下载-链接-blueviolet.svg?logo=hack-the-box)](https://github.com/518512/My-ROOTFS/releases) |
+| [![](https://img.shields.io/badge/OpenWrt-LEDE_ArmV8_Mini_ROOTFS-32C955.svg?logo=openwrt)](#) |[![](https://github.com/518512/My-ROOTFS/actions/workflows/Armvirt64.mini.ROOTFS.yml/badge.svg)](#) | [![](https://img.shields.io/badge/下载-链接-blueviolet.svg?logo=hack-the-box)](https://github.com/518512/My-ROOTFS/releases) |
+| [![](https://img.shields.io/badge/OpenWrt-LEDE_ArmV8_ROOTFS-32C955.svg?logo=openwrt)](#) |[![](https://github.com/518512/My-ROOTFS/actions/workflows/Armvirt64.ROOTFS.yml/badge.svg)](#) | [![](https://img.shields.io/badge/下载-链接-blueviolet.svg?logo=hack-the-box)](https://github.com/518512/My-ROOTFS/releases) |
+| [![](https://img.shields.io/badge/OpenWrt-LEDE_X86_X64_ROOTFS-32C955.svg?logo=openwrt)](#) |[![](https://github.com/518512/My-ROOTFS/actions/workflows/x86_x64.ROOTFS.yml/badge.svg)](#) | [![](https://img.shields.io/badge/下载-链接-blueviolet.svg?logo=hack-the-box)](https://github.com/518512/My-ROOTFS/releases) |
+| [![](https://img.shields.io/badge/OpenWrt-LEDE_X86_X64_Mini_ROOTFS-32C955.svg?logo=openwrt)](#) |[![](https://github.com/518512/My-ROOTFS/actions/workflows/x86_x64.mini.ROOTFS.yml/badge.svg)](#) | [![](https://img.shields.io/badge/下载-链接-blueviolet.svg?logo=hack-the-box)](https://github.com/518512/My-ROOTFS/releases) |
+| [![](https://img.shields.io/badge/OpenWrt-ImmortalWrt_X86_X64_ROOTFS-32C955.svg?logo=openwrt)](#) |[![](https://github.com/518512/My-ROOTFS/actions/workflows/Test-ImmortalWrt-router.yml/badge.svg)](#) | [![](https://img.shields.io/badge/下载-链接-blueviolet.svg?logo=hack-the-box)](https://github.com/518512/My-ROOTFS/releases) |
+| [![](https://img.shields.io/badge/OpenWrt-ImmortalWrt_X86_X64_Mini_ROOTFS-32C955.svg?logo=openwrt)](#) |[![](https://github.com/518512/My-ROOTFS/actions/workflows/Test-ImmortalWrt-gateway.yml/badge.svg)](#) | [![](https://img.shields.io/badge/下载-链接-blueviolet.svg?logo=hack-the-box)](https://github.com/518512/My-ROOTFS/releases) |
 
 - 为什么要有三个版本的OpenWRT？
 - 仅限于就**自身**使用需求来看，ImmortalWrt更适合作为主路由，LEDE更适合旁路网关，或者无IPV6 RA设置需求的。
