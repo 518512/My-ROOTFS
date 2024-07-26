@@ -30,7 +30,7 @@ function merge_feed(){
 rm -rf package/custom; mkdir package/custom
 
 # Modify default IP
-#sed -i 's/192.168.1.1/192.168.50.5/g' package/base-files/files/bin/config_generate
+sed -i 's/192.168.1.1/10.5.2.1/g' package/base-files/files/bin/config_generate
 
 # poweroff
 git clone https://github.com/esirplayground/luci-app-poweroff package/luci-app-poweroff
