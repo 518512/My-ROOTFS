@@ -8,8 +8,8 @@
 
 **OpenWRT(ImmortalWrt) v23.05 Fork [217heidai/OpenWrt-Builder](https://github.com/217heidai/OpenWrt-Builder)使用[ImmortalWrt源码](https://github.com/immortalwrt/immortalwrt)源码编译**
   |名称|说明|用户|密码|
-  |:----|:----|:----|:----|:----| 
-  | IP| 10.5.2.1| root| password| 如遇不可打开，可尝试192.168.1.5，或查看/etc/config/network里的信息| 
+  |:----|:----|:----|:----| 
+  | IP| 10.5.2.1| root| password| 
 ## 固件下载 [![](https://img.shields.io/badge/-编译状态及下载链接-FFFFFF.svg)](#固件下载-)
 点击下表中 [![](https://img.shields.io/badge/下载-链接-blueviolet.svg?style=flat&logo=hack-the-box)](https://github.com/518512/My-ROOTFS/releases) 即可跳转到该设备固件下载页面
 | 平台+设备名称 | 固件编译状态 | 固件下载 |
