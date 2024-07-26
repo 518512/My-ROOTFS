@@ -7,6 +7,9 @@
 **OpenWRT(LEDE) v24.07.07 Fork [Zane-E/ROOTFS](https://github.com/Zane-E/ROOTFS)使用[LEDE源码](https://github.com/coolsnowwolf/lede)源码编译**
 
 **OpenWRT(ImmortalWrt) v23.05 Fork [217heidai/OpenWrt-Builder](https://github.com/217heidai/OpenWrt-Builder)使用[ImmortalWrt源码](https://github.com/immortalwrt/immortalwrt)源码编译**
+  |名称|说明|用户|密码|
+  |:----|:----|:----|:----|
+  | IP| 10.5.2.1| root| password|
 ## 固件下载 [![](https://img.shields.io/badge/-编译状态及下载链接-FFFFFF.svg)](#固件下载-)
 点击下表中 [![](https://img.shields.io/badge/下载-链接-blueviolet.svg?style=flat&logo=hack-the-box)](https://github.com/518512/My-ROOTFS/releases) 即可跳转到该设备固件下载页面
 | 平台+设备名称 | 固件编译状态 | 固件下载 |
@@ -38,9 +41,6 @@
 > **插件：基础功能、IPV6、OC、AdguardHome、MosDNS、Agron主题**
 
 **仅适用于ARMv8的CPU，且只提供LXC所需的rootfs.**
-  |名称|说明|用户|密码|
-  |:----|:----|:----|:----|
-  | IP| 10.5.2.1| root| password|
 
 **用于x86_x64的的请到原作者处[xYx-c/build-openwrt/releases](https://github.com/xYx-c/build-openwrt/releases)下载.**
 
