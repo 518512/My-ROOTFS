@@ -10,7 +10,7 @@
 # See /LICENSE for more information.
 #
 
-name: Builder ImmortalWrt Gateway 23.05
+name: Builder ImmortalWrt Gateway 23.05 
 
 permissions: write-all
 #开启写权限，防止无法上传到release
