@@ -44,7 +44,6 @@ git clone https://github.com/sbwml/packages_lang_golang -b 20.x feeds/packages/l
 git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
 git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 
-# update golang
-# pushd feeds/packages/lang
-# rm -rf golang && svn co https://github.com/openwrt/packages/trunk/lang/golang
-# popd
+## update golang 1.23
+rm -rf feeds/packages/lang/golang
+git clone https://github.com/sbwml/packages_lang_golang -b 23.x feeds/packages/lang/golang
