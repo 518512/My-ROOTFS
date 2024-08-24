@@ -51,7 +51,7 @@ git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 rm -rf feeds/packages/lang/golang
 git clone https://github.com/sbwml/packages_lang_golang -b 23.x feeds/packages/lang/golang
 
-git checkout v23.05.3
+# git checkout v23.05.3
 
 ./scripts/feeds update -a
 ./scripts/feeds install -a
