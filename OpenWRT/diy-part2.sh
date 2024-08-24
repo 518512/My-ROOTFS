@@ -47,7 +47,7 @@ git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 # rm -rf golang && svn co https://github.com/openwrt/packages/trunk/lang/golang
 # popd
 
-# update golang
+# update golang 1.23
 rm -rf feeds/packages/lang/golang
 git clone https://github.com/sbwml/packages_lang_golang -b 23.x feeds/packages/lang/golang
 
