@@ -4,7 +4,7 @@
   
 **OpenWRT v23.05（main）为缝合产物，搞了两天没搞定，因为同样的配置文件v23.05会编译错误。**
 
-**OpenWRT(LEDE) v24.07.07 Fork [Zane-E/ROOTFS](https://github.com/Zane-E/ROOTFS)使用[LEDE源码](https://github.com/coolsnowwolf/lede)源码编译**
+**OpenWRT(LEDE) v24.10.24 Fork [Zane-E/ROOTFS](https://github.com/Zane-E/ROOTFS)使用[LEDE源码](https://github.com/coolsnowwolf/lede)源码编译**
 
 **OpenWRT(ImmortalWrt) v23.05 Fork [217heidai/OpenWrt-Builder](https://github.com/217heidai/OpenWrt-Builder)使用[ImmortalWrt源码](https://github.com/immortalwrt/immortalwrt)源码编译**
   |名称|说明|用户|密码|备选|
