@@ -26,13 +26,19 @@
 - 为什么要有三个版本的OpenWRT？
 - 仅限于就**自身**使用需求来看，ImmortalWrt更适合作为主路由，LEDE更适合旁路网关，或者无IPV6 RA设置需求的。
 - 另外的OpenWRT官方版如**xYx-c所说**很清爽。
-## LEDE ARM X86_X64
-> [!TIP]
-> **插件：基础功能、IPV6、Wireguard、SSR Plus+、PW、PW2、OC、Argon 主题、AdGuard Home、Mosdns、upnp、ZeroTier、Turbo ACC、ShutDown/关机、......**
 
+## LEDE/ImmortalWrt/OpenWRT Official ARM X86_X64 mini（主力更新）
+> [!TIP]
+> **插件：基础功能、IPV6、Wireguard、SSR Plus+、PW、OC、Argon 主题、AdGuard Home、Mosdns、upnp、ShutDown/关机、SmartDNS**
+> > **待加入：mosdns、ttyd**
+> > **待完成：统一LEDE/ImmortalWrt/OpenWRT Official mini配置文件，但是很懒**
 > ~~待解决，直接使用管理界面无法打开，需更改uhttpd注释掉 443 相关的两行。 https://github.com/coolsnowwolf/lede/issues/11546 ！~~
 > > **2024.11.15貌似修复了此问题，采用替换uhttpd配置文件的方式，貌似顺便修复了网口的问题,测试一下。目前只编译了X86_X64版**
 
+## LEDE ARM X86_X64
+> [!TIP]
+> **插件：基础功能、IPV6、Wireguard、SSR Plus+、PW、PW2、OC、Argon 主题、AdGuard Home、Mosdns、upnp、ZeroTier、Turbo ACC、ShutDown/关机、......**
+> > **待解决，直接使用管理界面无法打开，需更改uhttpd注释掉 443 相关的两行。 https://github.com/coolsnowwolf/lede/issues/11546 ！**
 ## ImmortalWrt X86_X64
 > [!TIP]
 > **插件：基础功能、IPV6、Wireguard、PW、OC、Argon 主题、Mosdns、upnp、Turbo ACC、ShutDown/关机、USB网卡......**
