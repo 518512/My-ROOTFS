@@ -31,7 +31,7 @@
 > [!TIP]
 > **插件：基础功能、IPV6、Wireguard、SSR Plus+、PW、OC、Argon 主题、AdGuard Home、Mosdns、upnp、ShutDown/关机、SmartDNS**
 
->  **待加入：mosdns（貌似现在不支持LEDE了，(https://github.com/sbwml/luci-app-mosdns/issues/252#issuecomment-2336829767） ）**
+>  **待加入：mosdns（貌似现在不支持LEDE了，https://github.com/sbwml/luci-app-mosdns/issues/252#issuecomment-2336829767 ）**
 
 >  **待完成：统一LEDE/ImmortalWrt/OpenWRT Official mini配置文件，但是很懒。PS：只能怪LXC真的太省心，部署完基本不需要维护**
 
