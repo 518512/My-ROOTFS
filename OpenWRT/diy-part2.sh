@@ -9,6 +9,9 @@
 # File name: diy-part2.sh
 # Description: OpenWrt DIY script part 2 (After Update feeds)
 #
+# apk-tools
+curl -s https://raw.githubusercontent.com/xuanranran/r4s_build_script/refs/heads/master/openwrt/patch/apk-tools/9999-hack-for-linux-pre-releases.patch > package/system/apk/patches/9999-hack-for-linux-pre-releases.patch
+
 # Modify default IP
 sed -i 's/192.168.1.1/10.5.2.1/g' package/base-files/files/bin/config_generate
  
